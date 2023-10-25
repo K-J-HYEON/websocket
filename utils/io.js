@@ -7,7 +7,12 @@ module.exports = function (io) {
 
     socket.on("login", async (userName, cb) => {
       // 유저정보를 저장
-      const user = userController.saveUser(userName, socket.id);
+      try {
+        const user = await userController.saveUser(userName, socket.id);
+        cb({ ok: true, data: user });
+      } catch (error) {
+        cb({ ok: false, error: error.message });
+      }
     });
 
     socket.on("disconnect", () => {
